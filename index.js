@@ -175,8 +175,8 @@ app.post("/mybot/", function (req, res) {
               url: "https://github.com/imSaharukh/AIUB-NOTICE-BOT/issues",
             },
             {
-              type: "অ্যাডমিন / ডেভেলপারের সাথে কথা বলুন",
-              title: "না ধন্যবাদ",
+              type: "web_url",
+              title: "অ্যাডমিন / ডেভেলপারের সাথে কথা বলুন",
               url: "https://facebook.com/imSaharukh",
             },
           ],
