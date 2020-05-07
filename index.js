@@ -165,7 +165,23 @@ app.post("/mybot/", function (req, res) {
       } else if (text === "stop" || text === "remove") {
         removeUserFromDB(sender);
       } else {
-        sendTextMessage(sender, text + "!");
+        sendButtonMessage(
+          sender,
+          "আমি একটি চ্যাট বট। AIUB.EDU এ কোনো নোটিস পোস্ট করা হলে এই বট ৫ মিনিটের মধ্যে আপনাকে জানিয়ে দিতে পারবো। এক্টিভ করতে যে কোন সময় 'start'  এবং ডিএক্টিভ করতে 'stop' লিখে ম্যাসেজ করুন \n ধন্যবাদ  ",
+          [
+            {
+              type: "web_url",
+              title: "নতুন ফিচার রিকুয়েস্ট বা আইদিয়া দিন",
+              url: "mailto:sasaharukh@gmail.com?subject=AIUB Messenger BOT",
+            },
+            {
+              type: "অ্যাডমিন / ডেভেলপারের সাথে কথা বলুন",
+              title: "না ধন্যবাদ",
+              url: "https://facebook.com/imSaharukh",
+            },
+          ],
+          "RESPONSE"
+        );
         console.log(`event  ${event.sender}`);
       }
     }
