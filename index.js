@@ -126,7 +126,7 @@ app.get("/mybot", function (req, res) {
     res.send(req.query["hub.challenge"]);
   } else res.send("Wrong token!");
 });
-//post
+
 // eslint-disable-next-line no-undef
 const token = process.env.FB_TOKEN;
 
@@ -172,7 +172,7 @@ app.post("/mybot/", function (req, res) {
             {
               type: "web_url",
               title: "নতুন ফিচার রিকুয়েস্ট বা আইদিয়া দিন",
-              url: "mailto:sasaharukh@gmail.com?subject=AIUB Messenger BOT",
+              url: "https://github.com/imSaharukh/AIUB-NOTICE-BOT/issues",
             },
             {
               type: "অ্যাডমিন / ডেভেলপারের সাথে কথা বলুন",
