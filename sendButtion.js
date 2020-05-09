@@ -3,6 +3,7 @@
 /* eslint-disable func-style */
 "use strict";
 const request = require("request");
+require("dotenv").config();
 // eslint-disable-next-line no-undef
 const token = process.env.FB_TOKEN;
 var sendButtonMessage = function (sender, text, buttons, type) {

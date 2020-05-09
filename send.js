@@ -7,6 +7,7 @@ const puppeteer = require("puppeteer");
 const fs = require("fs").promises;
 const fss = require("fs");
 const mongo = require("mongodb").MongoClient;
+require("dotenv").config();
 const sendButtonMessage = require("./sendButtion");
 var changeNotice = [];
 var z = 0;
@@ -59,13 +60,13 @@ var checkMessageAndSend = async function () {
       try {
         var notice = await fs.readFile("notice.json", "utf8");
         // newNotice = await fs.readFile("new.json", "utf8");
-        changeNotice = JSON.parse(notice).filter(function (objFromA) {
-          return !keyVal.find(function (objFromB) {
+        changeNotice = keyVal.filter(function (objFromA) {
+          return !JSON.parse(notice).find(function (objFromB) {
             return objFromA.title === objFromB.title;
           });
         });
         console.log(changeNotice.length);
-        console.log(`length of  c ${changeNotice}`);
+        console.log(`length of  c ${changeNotice.launch}`);
         if (changeNotice.length > 0) {
           for (z = 0; z < changeNotice.length; z++) {
             // eslint-disable-next-line multiline-comment-style
@@ -134,5 +135,5 @@ function somdata(noticeNumber) {
     }
   });
 }
-checkMessageAndSend();
+//checkMessageAndSend();
 module.exports = checkMessageAndSend;

@@ -8,6 +8,7 @@ const util = require("util");
 const sendButtonMessage = require("./sendButtion");
 const app = express();
 var rp = require("request-promise");
+require("dotenv").config();
 const checkMessageAndSend = require("./send");
 // eslint-disable-next-line no-undef
 app.set("port", process.env.PORT || 8000);
