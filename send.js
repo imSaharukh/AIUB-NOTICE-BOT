@@ -65,8 +65,10 @@ var checkMessageAndSend = async function () {
             return objFromA.title === objFromB.title;
           });
         });
-        console.log(changeNotice.length);
-        console.log(`length of  c ${changeNotice.launch}`);
+        console.log(`length of  c ${changeNotice.length}`);
+        console.log(`Changed Notice = ${changeNotice}`);
+        console.log(`from web Notice = ${keyVal}`);
+        console.log(`from local Notice = ${JSON.parse(notice)}`);
         if (changeNotice.length > 0) {
           for (z = 0; z < changeNotice.length; z++) {
             // eslint-disable-next-line multiline-comment-style
