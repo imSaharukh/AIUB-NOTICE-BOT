@@ -4,19 +4,24 @@
 /* eslint-disable func-style */
 "use strict";
 const puppeteer = require("puppeteer");
-const fs = require("fs").promises;
-const fss = require("fs");
+const colors = require("colors");
 const mongo = require("mongodb").MongoClient;
 require("dotenv").config();
 const sendButtonMessage = require("./sendButtion");
+
+//express installed
 var changeNotice = [];
 var z = 0;
 var keyVal = [];
-//express installed
-
+const url = process.env.DB_URL;
+const dbName = process.env.DB_NAME;
 // eslint-disable-next-line func-style
 // eslint-disable-next-line max-lines-per-function
 var checkMessageAndSend = async function () {
+  changeNotice = [];
+  z = 0;
+  keyVal = [];
+
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox"],
@@ -56,43 +61,68 @@ var checkMessageAndSend = async function () {
 
     // console.log(keyVal);
     // eslint-disable-next-line no-sync
-    if (fss.existsSync("notice.json")) {
-      try {
-        var notice = await fs.readFile("notice.json", "utf8");
-        // newNotice = await fs.readFile("new.json", "utf8");
-        changeNotice = keyVal.filter(function (objFromA) {
-          return !JSON.parse(notice).find(function (objFromB) {
-            return objFromA.title === objFromB.title;
-          });
-        });
-        console.log(`length of  c ${changeNotice.length}`);
-        console.log(`Changed Notice = ${changeNotice}`);
-        console.log(`from web Notice = ${keyVal}`);
-        console.log(`from local Notice = ${JSON.parse(notice)}`);
-        if (changeNotice.length > 0) {
-          for (z = 0; z < changeNotice.length; z++) {
-            // eslint-disable-next-line multiline-comment-style
-            somdata(z);
-            fs.writeFile("notice.json", JSON.stringify(keyVal), function (err) {
-              if (err) {
-                console.log(err);
+
+    try {
+      // var notice = await fs.readFile("notice.json", "utf8");
+      mongo.connect(url, function (err, client) {
+        console.log("Connected successfully to server");
+
+        const db = client.db(dbName);
+        const collection = db.collection("notices");
+        collection.findOne({ name: "notices" }, (error, response) => {
+          if (error) {
+            console.log(err);
+          } else {
+            console.log("here", response.data);
+            var notice = response.data;
+            changeNotice = keyVal.filter(
+              ({ link: id1 }) => !notice.some(({ link: id2 }) => id2 === id1)
+            );
+
+            console.log(`length of  c ${changeNotice.length}`);
+            console.log(`Changed Notice = ${changeNotice}`);
+            // console.log(`from web Notice = `);
+            // for (var i = 0; changeNotice.length > i; i++) {
+            //   console.log(keyVal[i].title);
+            // }
+            // console.log(`from DB Notice = `);
+            // for (var j = 0; changeNotice.length > j; j++) {
+            //   console.log(notice[j].title);
+            // }
+            console.log(`changeed notice = `.black.bgGreen);
+            for (var k = 0; changeNotice.length > k; k++) {
+              console.log(`${keyVal[k].title}`.black.bgGreen);
+            }
+            if (changeNotice.length > 0) {
+              for (z = 0; z < changeNotice.length; z++) {
+                // eslint-disable-next-line multiline-comment-style
+                // eslint-disable-next-line function-paren-newline
+                console.log("new notice update to json");
+                somdata(z);
+                update();
               }
-            });
+            } else {
+              console.log("no new notice");
+            }
           }
-        } else {
-          console.log("no new notice");
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.log("File not found so new 'notice.json' file created!");
-      fs.writeFile("notice.json", JSON.stringify(keyVal), function (err) {
-        if (err) {
-          console.log(err);
-        }
+        });
+        client.close();
       });
+      // newNotice = await fs.readFile("new.json", "utf8");
+      // changeNotice = keyVal.filter(function (objFromA) {
+      //   return !JSON.parse(notice).find(function (objFromB) {
+      //     return objFromA.title === objFromB.title;
+      //   });
+      // });
+      // var c = JSON.parse(notice).filter(function (objFromA) {
+      //   return !keyVal.find(function (objFromB) {
+      //     return objFromA.title === objFromB.title;
+      //   });
+      // });
+    } catch (e) {
+      console.log(e);
     }
+
     await browser.close();
   } catch (error) {
     console.log(`network error ${error}`);
@@ -135,6 +165,26 @@ function somdata(noticeNumber) {
           client.close();
         });
     }
+  });
+}
+function update() {
+  mongo.connect(url, function (err, client) {
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+    const collection = db.collection("notices");
+    collection.findOneAndUpdate(
+      { name: "notices" },
+      { $set: { data: keyVal } },
+      (error, response) => {
+        if (error) {
+          console.log(err);
+        } else {
+          console.log("here", response);
+        }
+      }
+    );
+    client.close();
   });
 }
 //checkMessageAndSend();
